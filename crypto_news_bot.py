@@ -51,7 +51,7 @@ def send_to_telegram(message):
 def main():
     print(f"⏰ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
-    if not GEMINI_API_KEY or not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+   if not GEMINI_API_KEY or not TELEGRAM_BOT_TOKEN or not CHAT_ID:
         print("❌ 環境変数が不足しています")
         return False
     
