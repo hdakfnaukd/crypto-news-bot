@@ -7,7 +7,7 @@ import google.genai as genai
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
+TELEGRAM_CHAT_ID = os.getenv("CHAT_ID")
 
 client = genai.Client(api_key=GEMINI_API_KEY)
 
