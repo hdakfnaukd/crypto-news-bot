@@ -5,13 +5,16 @@ import requests
 from datetime import datetime
 import google.genai as genai
 
+# 環境変数を読み込む
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-TELEGRAM_CHAT_ID = os.getenv("CHAT_ID")
+CHAT_ID = os.getenv("CHAT_ID")
 
+# Gemini クライアントを初期化
 client = genai.Client(api_key=GEMINI_API_KEY)
 
 def generate_crypto_news():
+    """Google Gemini APIを使用して仮想通貨ニュースを生成"""
     prompt = """あなたは経済ニュースサイトです。最近の重要な仮想通貨ニュースを5つ挙げて下さい。
 
 出力形式：
@@ -38,28 +41,34 @@ def generate_crypto_news():
         )
         return response.text
     except Exception as e:
-        print(f"エラー: {e}")
+        print(f"❌ ニュース生成エラー: {e}")
         return None
 
 def send_to_telegram(message):
+    """Telegramにメッセージを送信"""
     try:
         url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
         payload = {
-            "chat_id": TELEGRAM_CHAT_ID,
+            "chat_id": CHAT_ID,
             "text": message,
             "parse_mode": "Markdown"
         }
         response = requests.post(url, json=payload )
         return response.status_code == 200
     except Exception as e:
-        print(f"エラー: {e}")
+        print(f"❌ Telegram送信エラー: {e}")
         return False
 
 def main():
+    """メイン処理"""
     print(f"⏰ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
+    # 環境変数の確認
     if not GEMINI_API_KEY or not TELEGRAM_BOT_TOKEN or not CHAT_ID:
         print("❌ 環境変数が不足しています")
+        print(f"  GEMINI_API_KEY: {'✓' if GEMINI_API_KEY else '✗'}")
+        print(f"  TELEGRAM_BOT_TOKEN: {'✓' if TELEGRAM_BOT_TOKEN else '✗'}")
+        print(f"  CHAT_ID: {'✓' if CHAT_ID else '✗'}")
         return False
     
     print("📰 ニュースを生成中...")
