@@ -22,26 +22,33 @@ def generate_crypto_news():
 
 その後、以下も追加：
 【現在、市場参加者が特に注目しているテーマ】
-【今後数日で注目すべきイベント】"""
+- テーマ1
+- テーマ2
+- テーマ3
 
+【今後数日で注目すべきイベント】
+- イベント1
+- イベント2
+- イベント3"""
+    
     try:
         response = client.models.generate_content(
-    model="gemini-2.0-flash",
-    contents=prompt
-)
+            model="gemini-2.0-flash",
+            contents=prompt
+        )
         return response.text
     except Exception as e:
         print(f"エラー: {e}")
         return None
 
 def send_to_telegram(message):
-    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-    payload = {
-        "chat_id": TELEGRAM_CHAT_ID,
-        "text": message,
-        "parse_mode": "Markdown"
-    }
     try:
+        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+        payload = {
+            "chat_id": TELEGRAM_CHAT_ID,
+            "text": message,
+            "parse_mode": "Markdown"
+        }
         response = requests.post(url, json=payload )
         return response.status_code == 200
     except Exception as e:
@@ -51,7 +58,7 @@ def send_to_telegram(message):
 def main():
     print(f"⏰ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
-   if not GEMINI_API_KEY or not TELEGRAM_BOT_TOKEN or not CHAT_ID:
+    if not GEMINI_API_KEY or not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
         print("❌ 環境変数が不足しています")
         return False
     
