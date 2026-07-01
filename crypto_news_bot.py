@@ -3,13 +3,13 @@
 import os
 import requests
 from datetime import datetime
-import google.generativeai as genai
+import google.genai as genai
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
-genai.configure(api_key=GEMINI_API_KEY)
+client = genai.Client(api_key=GEMINI_API_KEY)
 
 def generate_crypto_news():
     prompt = """あなたは経済ニュースサイトです。最近の重要な仮想通貨ニュースを5つ挙げて下さい。
@@ -25,8 +25,10 @@ def generate_crypto_news():
 【今後数日で注目すべきイベント】"""
 
     try:
-        model = genai.GenerativeModel("gemini-pro")
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+    model="gemini-2.0-flash",
+    contents=prompt
+)
         return response.text
     except Exception as e:
         print(f"エラー: {e}")
