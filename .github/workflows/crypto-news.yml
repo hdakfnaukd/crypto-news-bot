@@ -2,38 +2,22 @@ name: 仮想通貨ニュース自動送信
 
 on:
   schedule:
-    # 毎日 00:00 UTC = 日本時間 09:00 に実行
     - cron: '0 0 * * *'
-  
-  # 手動実行も可能
   workflow_dispatch:
 
 jobs:
   send-crypto-news:
     runs-on: ubuntu-latest
-    
     steps:
-      - name: リポジトリをチェックアウト
-        uses: actions/checkout@v3
-      
-      - name: Pythonをセットアップ
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-      
-      - name: 依存パッケージをインストール
-        run: |
+      - run: |
           python -m pip install --upgrade pip
           pip install google-genai requests
-      
-      - name: ニュースボットを実行
+      - run: python crypto_news_bot.py
         env:
-  GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-  TELEGRAM_CHAT_ID: ${{ secrets.CHAT_ID }}
-        run: python crypto_news_bot.py
-      
-      - name: 実行ログを保存
-        if: always()
-        run: |
-          echo "実行完了: $(date)" >> run_log.txt
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.CHAT_ID }}
